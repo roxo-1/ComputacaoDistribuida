@@ -1,3 +1,9 @@
+/*
+ANA JULIA YAGUTI MATILHA - 10436655
+CAROLINA LEE - 10440304
+PEDRO CASAS PEQUENO JUNIOR - 10437031
+*/
+
 #include <stdio.h>
 #include <stdlib.h> 
 
