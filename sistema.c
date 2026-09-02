@@ -56,6 +56,7 @@ void adicionar_produto(Produto *v,int tamanho){
     scanf("%f", &preco);
     printf("\nQuantidade: ");
     scanf("%d", &qtd);
+    printf("-------------------------");
 
     //Cria o produto  na struct
     Produto p;
@@ -82,11 +83,22 @@ void adicionar_produto(Produto *v,int tamanho){
 
 
 }
-void listar_produtos(Produto *v){
+void listar_produtos(Produto *v, int tamanho){
     /*- Exibe todos os produtos cadastrados em formato tabular.
     - Mostra: código, nome, preço, quantidade e **valor em estoque** (preço × quantidade).
     - Ao final, exibe o **valor total do estoque** (soma de todos os valores em estoque).*/
-    printf("--- Lista de Produtos ---");
+    float total_estoque =0;
+    printf("\n--- Lista de Produtos ---\n"); 
+    printf("Codigo | Nome   |  Preco  | Quantidade | Valor em Estoque\n"); 
+    printf("--------------------------------------------------------\n"); 
+    for (int i = 0; i < tamanho; i++) { 
+        float valor_estoque; 
+        valor_estoque = v[i].preco * v[i].quantidade; 
+        printf("     %d | %s | R$ %.2f |    %d     | R$ %.2f\n", v[i].codigo, v[i].nome, v[i].preco, v[i].quantidade, valor_estoque); 
+        total_estoque = total_estoque + valor_estoque; } 
+        printf("-----------------------------------------------------------\n"); 
+    printf("Valor total do estoque: R$ %.2f\n", total_estoque);
+
 }
 Produto* buscar_produto(Produto *v){
     /*- O usuário informa um código.
@@ -123,7 +135,7 @@ void liberar_memoria(Produto *v){
 int main(){
     Produto *vetor_produtos = criacao_vetor();
     int opcao = 0;
-    int tamanho = 1;
+    int tamanho = 0;
     //Mostra e lê as opções do menu
     printf("========================================\n");
     printf("    SISTEMA DE CADASTRO DE PRODUTOS     \n");
@@ -143,7 +155,7 @@ int main(){
             adicionar_produto(vetor_produtos, tamanho);
         }
         else if (opcao == 2 ){
-            listar_produtos(vetor_produtos);
+            listar_produtos(vetor_produtos, tamanho);
         }
         else if (opcao == 3){
             buscar_produto(vetor_produtos);
