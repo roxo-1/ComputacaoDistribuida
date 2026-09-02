@@ -9,47 +9,61 @@ typedef struct {
     int quantidade;
 } Produto;
 
-void adicionar_produto();
-void listar_produtos();
-Produto* buscar_produto();
-void atualizar_estoque();
-void remover_produto();
-void liberar_memoria();
+void adicionar_produto(){
+    printf("Produto adicionado");
+}
+void listar_produtos(){
+    printf("Lista de produtos");
+}
+Produto* buscar_produto(){
+    return 0;
+}
+void atualizar_estoque(){
+    printf("Produto atualizado");
+}
+void remover_produto(){
+    printf("produto removido");
+}
+void liberar_memoria(){
+    printf("memória liberada");
+}
 
-int menu(){
-    int opcao;
+
+int main(){
+    int opcao = 0;
+     //Mostra e lê as opções
     printf("========================================\n");
     printf("    SISTEMA DE CADASTRO DE PRODUTOS     \n");
     printf("========================================\n");
-    printf("\nMenu:\n1. Adicionar produto\n2. Listar produtos\n3. Buscar produto\n4. Atualizar estoque\n5. Remover produto\n6. Sair\n");
-    scanf("Opção: %d", &opcao);
-    return opcao;
-}
+    printf("\nMenu:\n1. Adicionar produto\n2. Listar produtos\n3. Buscar produto\n4. Atualizar estoque\n5. Remover produto\n6. Sair");
 
-int main(){
-    int opcaoEscolhida = menu();
-    while ( (opcaoEscolhida<1) || (opcaoEscolhida>6)){
-        printf("Opção inválida, escolha novamente.\n");
-        menu();
+    while (opcao != 6){
+        //Válidação básica
+        printf("\nOpção: ");
+        scanf("%d", &opcao);
+        while ( (opcao<=0) || (opcao>=7)){
+            printf("\nOpção: ");
+            scanf("%d", &opcao);
+        }
+        //redirecionando para as funções certas
+        if (opcao == 1){
+            adicionar_produto();
+        }
+        else if (opcao == 2 ){
+            listar_produtos();
+        }
+        else if (opcao == 3){
+            buscar_produto();
+        }
+        else if (opcao == 4){
+            atualizar_estoque();
+        }
+        else if (opcao == 5){
+            remover_produto();
+        }
     }
-    if (opcaoEscolhida == 1){
-        adicionar_produto();
-    }
-    else if (opcaoEscolhida == 2 ){
-        listar_produtos();
-    }
-    else if (opcaoEscolhida == 3){
-        buscar_produto();
-    }
-    else if (opcaoEscolhida == 4){
-        atualizar_estoque();
-    }
-    else if (opcaoEscolhida == 5){
-        remover_produto();
-    }
-    else if( opcaoEscolhida == 6){
+    if( opcao == 6){
         liberar_memoria();
     }
-    printf("fim");
     return 0;
 }
