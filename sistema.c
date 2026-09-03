@@ -104,7 +104,7 @@ Produto* buscar_produto(Produto *v, int tamanho, int codigo){
     /*- O usuário informa um código.
     - O sistema busca e exibe as informações do produto, ou informa que não foi encontrado.
     - A busca deve ser implementada em uma **função separada** que retorne um ponteiro para o produto encontrado (ou `NULL`).*/
-    for (int i =0; i < tamnho; i++) {
+    for (int i =0; i < tamanho; i++) {
         if (v[i].codigo == codigo){
             return &v[i];
         }
@@ -127,21 +127,21 @@ void remover_produto(Produto *v){
     - **Atenção especial** à ordem de liberação de memória!*/
     printf("--- Atualizar Estoque ---");
 }
-void liberar_memoria(Produto *v){
+void liberar_memoria(Produto *v, int tamanho){
     // ese liberar memória é de um produto em especifico
     /*- Antes de encerrar, o programa **deve liberar toda a memória alocada**:
     - Primeiro: liberar cada `nome` individualmente
     - Depois: liberar o vetor de produtos
     - Exiba uma mensagem confirmando que a memória foi liberada.*/
-    printf("Liberando memória...");
+    printf("Liberando memória...\n");
 
     for (int i = 0; i < tamanho; i++) {
-        printf(v[i].nome);
+        printf("Memória do produto %s liberada.\n", v[i].nome);
         free(v[i].nome);
     }
     free(v);
-    printf("Vetor de produtos liberado.");
-    printf("Programa encerrado.");
+    printf("Vetor de produtos liberado.\n");
+    printf("Programa encerrado.\n");
 }
 
 
@@ -171,7 +171,21 @@ int main(){
             listar_produtos(vetor_produtos, tamanho);
         }
         else if (opcao == 3){
-            buscar_produto(vetor_produtos);
+            int codigo_busca;
+            printf("--- Buscar Produto ---");
+            printf("\nCódigo do produto: ");
+            scanf("%d", &codigo_busca);
+ 
+            Produto *encontrado = buscar_produto(vetor_produtos, tamanho, codigo_busca);
+            if (encontrado != NULL){
+                printf("\nProduto encontrado:\n");
+                printf("Código: %d\n", encontrado->codigo);
+                printf("Nome: %s\n", encontrado->nome);
+                printf("Preço: R$ %.2f\n", encontrado->preco);
+                printf("Quantidade: %d\n", encontrado->quantidade);
+            } else {
+                printf("\nProduto não encontrado!\n");
+            }
         }
         else if (opcao == 4){
             atualizar_estoque(vetor_produtos);
@@ -182,7 +196,7 @@ int main(){
     }
     //opção 6 menu, Sair
     if( opcao == 6){
-        liberar_memoria(vetor_produtos);
+        liberar_memoria(vetor_produtos, tamanho);
     }
     return 0;
 }
