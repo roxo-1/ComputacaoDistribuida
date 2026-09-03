@@ -100,11 +100,16 @@ void listar_produtos(Produto *v, int tamanho){
     printf("Valor total do estoque: R$ %.2f\n", total_estoque);
 
 }
-Produto* buscar_produto(Produto *v){
+Produto* buscar_produto(Produto *v, int tamanho, int codigo){
     /*- O usuário informa um código.
     - O sistema busca e exibe as informações do produto, ou informa que não foi encontrado.
     - A busca deve ser implementada em uma **função separada** que retorne um ponteiro para o produto encontrado (ou `NULL`).*/
-    return 0;
+    for (int i =0; i < tamnho; i++) {
+        if (v[i].codigo == codigo){
+            return &v[i];
+        }
+    }
+    return NULL;
 }
 void atualizar_estoque(Produto *v){
     /*- O usuário informa o código do produto e a nova quantidade.
@@ -129,6 +134,14 @@ void liberar_memoria(Produto *v){
     - Depois: liberar o vetor de produtos
     - Exiba uma mensagem confirmando que a memória foi liberada.*/
     printf("Liberando memória...");
+
+    for (int i = 0; i < tamanho; i++) {
+        printf(v[i].nome);
+        free(v[i].nome);
+    }
+    free(v);
+    printf("Vetor de produtos liberado.");
+    printf("Programa encerrado.");
 }
 
 
