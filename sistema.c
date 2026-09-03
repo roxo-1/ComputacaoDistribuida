@@ -17,15 +17,15 @@ typedef struct {
 
 //Funções
 Produto* criacao_vetor(){
-    Produto *vetor;
-    int n = 250;
-    vetor = (Produto*) malloc(n * sizeof(Produto));
+    // Produto *vetor;
+    // int n = 250;
+    // vetor = (Produto*) malloc(n * sizeof(Produto));
     
-    if (vetor == NULL) {
-        printf("Erro: Falha na alocação de memória!\n");
-        return NULL;
-    }
-    return vetor;
+    // if (vetor == NULL) {
+    //     printf("Erro: Falha na alocação de memória!\n");
+    //     return NULL;
+    // }
+    return NULL;
 }
 
 void adicionar_produto(Produto *v,int tamanho){
@@ -42,16 +42,13 @@ void adicionar_produto(Produto *v,int tamanho){
 
     //Gerar código único
     // Para calcular o tamanho real do vetor+1
-    int cont;
-    for (int i = 0; i<sizeof(v); i++){
-        cont++;
-    }
-    id = cont+1;
+    int cont = 1;
+    id = cont;
 
     //Pegas as infos do produto segundo o usuário
     printf("--- Adicionar Produto ---");
     printf("\nNome: ");
-    scanf("%s", nome);
+    scanf(" %[^\n]", nome);
     printf("\nPreço: ");
     scanf("%f", &preco);
     printf("\nQuantidade: ");
@@ -64,6 +61,11 @@ void adicionar_produto(Produto *v,int tamanho){
     p.nome=nome;
     p.preco=preco;
     p.quantidade=qtd;
+
+    Produto *novo_vetor = (Produto*) realloc(v, (tamanho + 1) * sizeof(Produto));
+    v = novo_vetor;
+    
+    v.nome = (char*) malloc(strlen(nome) + 1);
 
 
     //realoca vetor
@@ -111,11 +113,28 @@ Produto* buscar_produto(Produto *v, int tamanho, int codigo){
     }
     return NULL;
 }
-void atualizar_estoque(Produto *v){
+void atualizar_estoque(Produto *v, int tamanho){
     /*- O usuário informa o código do produto e a nova quantidade.
     - O sistema deve usar a função de busca (item 3) para localizar o produto.
     - Utilize **passagem por referência** para modificar a quantidade.*/
+    int codigo;
+    int nova_qtd;
+
     printf("--- Atualizar Estoque ---");
+    printf("\nCódigo do produto: ");
+    scanf("%d", &codigo);
+
+    Produto *p = buscar_produto(v, tamanho, codigo);
+    if (p == NULL) {
+        printf("Não localizado!");
+        return;
+    }
+
+    printf("Nova quantidade: ");
+    scanf("%d", nova_qtd);
+
+    p->quantidade = nova_qtd;
+    printf("Estoque atualizado com sucesso!\n");
 }
 void remover_produto(Produto *v){
     /*- O usuário informa o código do produto a ser removido.
