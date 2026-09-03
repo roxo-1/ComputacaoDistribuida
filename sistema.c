@@ -5,7 +5,8 @@ PEDRO CASAS PEQUENO JUNIOR - 10437031
 */
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
+#include <string.h> 
 
 // Definição da struct
 typedef struct {
@@ -28,12 +29,11 @@ Produto* criacao_vetor(){
     return NULL;
 }
 
-void adicionar_produto(Produto *v,int tamanho){
+void adicionar_produto(Produto **v,int *tamanho){
     //variáveis pro código funcionar
     char nome[100];
     float preco;
     int qtd, id;
-    int novo_tamanho = tamanho+1;
     /*
     - O usuário informa: nome, preço e quantidade.
     - O sistema gera automaticamente um código único (incremental).
@@ -42,7 +42,7 @@ void adicionar_produto(Produto *v,int tamanho){
 
     //Gerar código único
     // Para calcular o tamanho real do vetor+1
-    int cont = 1;
+    static int cont = 1;
     id = cont;
 
     //Pegas as infos do produto segundo o usuário
@@ -53,35 +53,51 @@ void adicionar_produto(Produto *v,int tamanho){
     scanf("%f", &preco);
     printf("\nQuantidade: ");
     scanf("%d", &qtd);
-    printf("-------------------------");
 
     //Cria o produto  na struct
-    Produto p;
-    p.codigo=id;
-    p.nome=nome;
-    p.preco=preco;
-    p.quantidade=qtd;
+    // Produto v;
+    // v.codigo=id;
+    // v.nome=nome;
+    // v.preco=preco;
+    // v.quantidade=qtd;
 
-    Produto *novo_vetor = (Produto*) realloc(v, (tamanho + 1) * sizeof(Produto));
-    v = novo_vetor;
-    
-    v.nome = (char*) malloc(strlen(nome) + 1);
-
-
-    //realoca vetor
-    v = (Produto*) realloc(v, novo_tamanho * sizeof(Produto));
-    
-    if (v == NULL) {
-        printf("Erro: Falha na realocação!\n");
+    Produto *novo_vetor = (Produto*) realloc(*v, (*tamanho + 1) * sizeof(Produto));
+    if (novo_vetor == NULL){
+        printf("Erro: Falha na realocação\n");
         return;
     }
-
-    //Adiciona o produto no vetor
-    for (int i = 0; i < novo_tamanho; i++) {
-        if (i == novo_tamanho) {
-            v[i] = p;
-        }
+    *v = novo_vetor;
+    
+    (*v)[*tamanho].nome = (char*) malloc(strlen(nome) + 1);
+    if ((*v)[*tamanho].nome == NULL){
+        printf("Erro: Falha na alocação para nome\n");
+        return;
     }
+    
+    strcpy((*v)[*tamanho].nome, nome);
+    (*v)[*tamanho].codigo = id;
+    (*v)[*tamanho].preco = preco;
+    (*v)[*tamanho].quantidade = qtd;
+
+    (*tamanho) ++;
+    cont ++;
+
+    printf("Produto adicionado com código %d!\n", id);
+
+    //realoca vetor
+    // v = (Produto*) realloc(v, novo_tamanho * sizeof(Produto));
+    
+    // if (v == NULL) {
+    //     printf("Erro: Falha na realocação!\n");
+    //     return;
+    // }
+
+    // //Adiciona o produto no vetor
+    // for (int i = 0; i < novo_tamanho; i++) {
+    //     if (i == novo_tamanho) {
+    //         v[i] = p;
+    //     }
+    // }
 
 
 }
@@ -131,7 +147,7 @@ void atualizar_estoque(Produto *v, int tamanho){
     }
 
     printf("Nova quantidade: ");
-    scanf("%d", nova_qtd);
+    scanf("%d", &nova_qtd);
 
     p->quantidade = nova_qtd;
     printf("Estoque atualizado com sucesso!\n");
@@ -155,7 +171,7 @@ void liberar_memoria(Produto *v, int tamanho){
     printf("Liberando memória...\n");
 
     for (int i = 0; i < tamanho; i++) {
-        printf("Memória do produto %s liberada.\n", v[i].nome);
+        printf("Memória do produto '%s' liberada.\n", v[i].nome);
         free(v[i].nome);
     }
     free(v);
@@ -184,7 +200,7 @@ int main(){
         }
         //redirecionando para as funções certas, menos a opção de sair que ficou para fora
         if (opcao == 1){
-            adicionar_produto(vetor_produtos, tamanho);
+            adicionar_produto(&vetor_produtos, &tamanho);
         }
         else if (opcao == 2 ){
             listar_produtos(vetor_produtos, tamanho);
@@ -207,7 +223,7 @@ int main(){
             }
         }
         else if (opcao == 4){
-            atualizar_estoque(vetor_produtos);
+            atualizar_estoque(vetor_produtos, tamanho);
         }
         else if (opcao == 5){
             remover_produto(vetor_produtos);
