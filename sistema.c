@@ -51,8 +51,18 @@ void adicionar_produto(Produto **v,int *tamanho){
     scanf(" %[^\n]", nome);
     printf("\nPreço: ");
     scanf("%f", &preco);
+    //validação preço
+    while (preco<0){
+        printf("\nPreço não pode ser negativo, digite novamente: ");
+        scanf("%f", &preco);
+    }
     printf("\nQuantidade: ");
     scanf("%d", &qtd);
+    //validação qtd 
+    while (qtd<0){
+        printf("\nQuantidade nâo pode ser negativo, digite novamente: ");
+        scanf("%d", &qtd);
+    }
 
     //Cria o produto  na struct
     // Produto v;
@@ -61,6 +71,7 @@ void adicionar_produto(Produto **v,int *tamanho){
     // v.preco=preco;
     // v.quantidade=qtd;
 
+    //ponteiro de ponteiro
     Produto *novo_vetor = (Produto*) realloc(*v, (*tamanho + 1) * sizeof(Produto));
     if (novo_vetor == NULL){
         printf("Erro: Falha na realocação\n");
@@ -110,10 +121,10 @@ void listar_produtos(Produto *v, int tamanho){
     printf("Codigo | Nome   |  Preco  | Quantidade | Valor em Estoque\n"); 
     printf("--------------------------------------------------------\n"); 
     for (int i = 0; i < tamanho; i++) { 
-        float valor_estoque; 
+        float valor_estoque; //valor total do produto
         valor_estoque = v[i].preco * v[i].quantidade; 
         printf("     %d | %s | R$ %.2f |    %d     | R$ %.2f\n", v[i].codigo, v[i].nome, v[i].preco, v[i].quantidade, valor_estoque); 
-        total_estoque = total_estoque + valor_estoque; } 
+        total_estoque = total_estoque + valor_estoque; } //valor do estoque todo
         printf("-----------------------------------------------------------\n"); 
     printf("Valor total do estoque: R$ %.2f\n", total_estoque);
 
@@ -127,6 +138,7 @@ Produto* buscar_produto(Produto *v, int tamanho, int codigo){
             return &v[i];
         }
     }
+    printf("Produto não encontrado\n");
     return NULL;
 }
 void atualizar_estoque(Produto *v, int tamanho){
@@ -140,7 +152,9 @@ void atualizar_estoque(Produto *v, int tamanho){
     printf("\nCódigo do produto: ");
     scanf("%d", &codigo);
 
+    //usa função buscar_produto para localizar o produto
     Produto *p = buscar_produto(v, tamanho, codigo);
+    //validação
     if (p == NULL) {
         printf("Não localizado!");
         return;
@@ -148,7 +162,12 @@ void atualizar_estoque(Produto *v, int tamanho){
 
     printf("Nova quantidade: ");
     scanf("%d", &nova_qtd);
-
+    //validação nova_qtd não pode ser negativa
+    while (nova_qtd<0){
+        printf("\nNova quantidade errada, digite novamente: ");
+        scanf("%d", &nova_qtd);
+    }
+    //passsagem por referencia
     p->quantidade = nova_qtd;
     printf("Estoque atualizado com sucesso!\n");
 }
@@ -194,6 +213,7 @@ void remover_produto(Produto **v, int *tamanho){
         return;
     }
 
+    //ponteiro de ponteiro
     Produto *novo_vetor = (Produto*) realloc(*v, (*tamanho) * sizeof(Produto));    
     if (novo_vetor == NULL){
         printf("Erro: Falha na realocação da remoção\n");
@@ -215,9 +235,9 @@ void liberar_memoria(Produto *v, int tamanho){
 
     for (int i = 0; i < tamanho; i++) {
         printf("Memória do produto '%s' liberada.\n", v[i].nome);
-        free(v[i].nome);
+        free(v[i].nome);//dá free no nome
     }
-    free(v);
+    free(v);//da free no vetor de produtos
     printf("Vetor de produtos liberado.\n");
     printf("Programa encerrado.\n");
 }
