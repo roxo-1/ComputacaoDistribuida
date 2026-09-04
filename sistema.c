@@ -171,7 +171,7 @@ void atualizar_estoque(Produto *v, int tamanho){
     p->quantidade = nova_qtd;
     printf("Estoque atualizado com sucesso!\n");
 }
-void remover_produto(Produto **v, int *tamanho){
+void remover_produto(Produto **v, int *tamanho) {
     /*- O usuário informa o código do produto a ser removido.
     - O sistema deve:
     1. Localizar o produto no vetor
@@ -179,51 +179,60 @@ void remover_produto(Produto **v, int *tamanho){
     3. Reorganizar o vetor (deslocar elementos)
     4. Realocar o vetor para o novo tamanho (`realloc`)
     - **Atenção especial** à ordem de liberação de memória!*/
+    
+    if (*tamanho == 0) {
+        printf("Não há produtos para remover!\n");
+        return;
+    }
+    
     int codigo;
     printf("--- Remover Produto ---");
     printf("\nCódigo do produto: ");
     scanf("%d", &codigo);
 
-    //1
+    // 1. Localizar o produto
     int indice = -1;
-    char salva_produto[*tamanho];
+    char nome_salvo[100]; // Array fixo para salvar o nome do produto removido
+    
     for (int i = 0; i < *tamanho; i++) {
-        if((*v)[i].codigo == codigo){
+        if ((*v)[i].codigo == codigo) {
             indice = i;
-            strcpy(salva_produto, (*v)[i].nome);
+            strcpy(nome_salvo, (*v)[i].nome);
             break;
         }
     }
-
-    //2
-    free((*v)[indice].nome);
-
-    //3
-    for (int i = indice; i < *tamanho; i++) {
-        (*v)[i] = (*v)[i+1];
-    }
-
-    (*tamanho) --;
-    //4
-    printf("%d", *tamanho);
-    if (*tamanho == 0) {
-        free(*v);
-        *v = NULL;
-        printf("Produto removido com sucesso!\n");
+    
+    if (indice == -1) {
+        printf("Produto com código %d não encontrado!\n", codigo);
         return;
     }
 
-    //ponteiro de ponteiro
-    Produto *novo_vetor = (Produto*) realloc(*v, (*tamanho) * sizeof(Produto));    
-    if (novo_vetor == NULL){
+    // 2. Liberar a memória do nome
+    free((*v)[indice].nome);
+
+    // 3. Reorganizar o vetor (deslocar elementos)
+    for (int i = indice; i < *tamanho - 1; i++) {
+        (*v)[i] = (*v)[i + 1];
+    }
+
+    (*tamanho)--;
+
+    // 4. Realocar o vetor para o novo tamanho
+    if (*tamanho == 0) {
+        free(*v);
+        *v = NULL;
+        printf("Produto '%s' removido com sucesso!\n", nome_salvo);
+        return;
+    }
+
+    Produto *novo_vetor = (Produto*)realloc(*v, (*tamanho) * sizeof(Produto));
+    if (novo_vetor == NULL) {
         printf("Erro: Falha na realocação da remoção\n");
         return;
     }
     *v = novo_vetor;
 
-    printf("Produto '%s' removido com sucesso!", salva_produto);
-
-
+    printf("Produto '%s' removido com sucesso!\n", nome_salvo);
 }
 void liberar_memoria(Produto *v, int tamanho){
     // ese liberar memória é de um produto em especifico
